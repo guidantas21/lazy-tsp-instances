@@ -1,10 +1,14 @@
-# Lazy TSP instances
+# Lazy TSP Instances
 
-The TSPLIB instance format is quite annoying to parse, and it is annoying to write a parser for each lprgramming language. Therefore, the idea is to simplify the instance to the most format basic format possible, so writting a instance reader is awalays trivial and does not take a lot of time. This script simplifies TSPLIB instance files by extracting the distance matrix and saving it in a simpler format. It supports parallel processing and filtering based on instance dimensions.
+The [TSPLIB 95 format](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/tsp95.pdf) is widely used for representing instances of the Traveling Salesman Problem (TSP), but it can be tedious and error-prone to parse—especially when writing instance readers in different programming languages.
 
-## Lazy instance format
+**Lazy TSP Instances** simplifies this format to the bare essentials, making it easier to load and use TSP instances in any environment. The script supports parallel processing and allows filtering by instance dimension.
 
-The format contains only the instance name, dimension and weight matrix:
+---
+
+## Lazy Instance Format
+
+The simplified format contains only the instance name, dimension, and full weight matrix:
 
 ```
 <instance name>
@@ -12,28 +16,29 @@ The format contains only the instance name, dimension and weight matrix:
 <weight matrix (dimension x dimension)>
 ```
 
+---
+
 ## Example
 
-Original TSPLIB format:
+### Original TSPLIB format:
 
 ```
-NAME: toy5
-TYPE: TSP
-COMMENT: 17-city problem (Groetschel)
-DIMENSION: 5
-EDGE_WEIGHT_TYPE: EXPLICIT
-EDGE_WEIGHT_FORMAT: FULL_MATRIX 
-EDGE_WEIGHT_SECTION
-    0   3   1   2   4
-    3   0   3   4   6
-    1   3   0   2   5
-    2   4   2   0   1
-    4   6   5   1   0
+NAME: toy5  
+TYPE: TSP  
+COMMENT: 5-city toy instance  
+DIMENSION: 5  
+EDGE_WEIGHT_TYPE: EXPLICIT  
+EDGE_WEIGHT_FORMAT: FULL_MATRIX  
+EDGE_WEIGHT_SECTION  
+    0   3   1   2   4  
+    3   0   3   4   6  
+    1   3   0   2   5  
+    2   4   2   0   1  
+    4   6   5   1   0  
 EOF
 ```
 
-Lazy format:
-
+### Lazy format:
 
 ```
 toy5
@@ -45,16 +50,19 @@ toy5
 4   6   5   1   0
 ```
 
-
-Here’s a **Usage** section you can include in your `README.md`:
-
 ---
 
 ## Usage
 
+### Dependencies
 
+Install the required packages using:
 
-### Command-line arguments
+```bash
+pip install -r requirements.txt
+```
+
+### Command-line syntax
 
 ```bash
 python3 main.py SOURCE_DIR TARGET_DIR [options]
@@ -65,14 +73,16 @@ python3 main.py SOURCE_DIR TARGET_DIR [options]
 * `SOURCE_DIR`: Path to the directory containing the original TSPLIB instances.
 * `TARGET_DIR`: Path to the directory where simplified instances will be saved.
 
-### Optional flags
+### Optional arguments
 
-| Flag           | Description                                        | Default |
-| -------------- | -------------------------------------------------- | ------- |
-| `-j`, `--jobs` | Number of processes to use for parallel processing | 4       |
-| `--override`   | Overwrite existing files in the target directory   | Off     |
-| `--min-dim`    | Minimum number of nodes (dimension) to process     | None    |
-| `--max-dim`    | Maximum number of nodes (dimension) to process     | None    |
+| Flag           | Description                                             | Default |
+| -------------- | ------------------------------------------------------- | ------- |
+| `-j`, `--jobs` | Number of processes to use for parallel processing      | 4       |
+| `--override`   | Overwrite existing files in the target directory        | False   |
+| `--min-dim`    | Minimum instance dimension (number of nodes) to include | None    |
+| `--max-dim`    | Maximum instance dimension (number of nodes) to include | None    |
+
+
 
 ### Example
 
@@ -80,6 +90,6 @@ python3 main.py SOURCE_DIR TARGET_DIR [options]
 python3 main.py ./tsplib95-instances ./simplified-instances --min-dim 50 --max-dim 500 --override -j 8
 ```
 
-This command processes all instances in `./tsplib95-instances` with dimensions between 50 and 500 (inclusive), using 8 parallel processes, and writes the simplified files to `./simplified-instances`, overwriting any existing files there.
+This command processes all instances in `./tsplib95-instances` with dimensions between 50 and 500 (inclusive), using 8 parallel processes, and writes the simplified instances to `./simplified-instances`, overwriting existing files if necessary.
 
 
